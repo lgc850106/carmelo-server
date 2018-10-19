@@ -57,6 +57,7 @@ public class SessionManager {
 						try {
 							if (session.isTimeout())
 							{
+								//客户端下线了，FutureManager会将相应的clientMap删除，所以这里不需要处理
 								destroySession(session.getSessionId());
 								Users.removeUser((Integer)(session.getParams().get(SessionConstants.USER_ID)));
 							}

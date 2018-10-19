@@ -24,14 +24,15 @@ import java.net.JarURLConnection;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import carmelo.common.ClassUtil;
+import carmelo.common.Configuration;
+import carmelo.common.SpringContext;
 import carmelo.servlet.annotation.PassParameter;
 import carmelo.servlet.annotation.SessionParameter;
 import carmelo.session.Session;
 import carmelo.session.SessionConstants;
 import carmelo.session.SessionManager;
 import carmelo.session.Users;
-import carmelo.common.ClassUtil;
-import carmelo.common.Configuration;
 
 /**
  * 
@@ -50,7 +51,7 @@ public class Servlet {
 	public void init(){
 		String scanActionPackage = Configuration.getProperty(Configuration.SCAN_ACTION_PACKAGE);
 		Set<Class<?>> classes = getActionClasses(scanActionPackage);
-		BeanFactory beanFactory = new ClassPathXmlApplicationContext("applicationContext.xml");
+		BeanFactory beanFactory = SpringContext.getBeanFactory();
 		for (Class<?> clazz : classes){
 			// get objects from spring bean factory
 			Object object = beanFactory.getBean(clazz);
@@ -58,6 +59,7 @@ public class Servlet {
 			for (Method method : methods){
 				ActionInvocation actionInvocation = new ActionInvocation(object, method);
 				actionMap.put(actionInvocation.getActionName(), actionInvocation);
+				System.out.println("扫描到业务接口：" + actionInvocation.getActionName());
 			}
 		}
 	}

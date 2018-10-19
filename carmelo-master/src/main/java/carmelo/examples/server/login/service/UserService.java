@@ -1,17 +1,15 @@
 package carmelo.examples.server.login.service;
 
-import java.util.Random;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import carmelo.common.SpringContext;
 import carmelo.examples.server.login.dao.UserDao;
 import carmelo.examples.server.login.domain.User;
-import carmelo.examples.server.login.dto.TestDto;
+import carmelo.examples.server.sync.FutureManager;
 import carmelo.json.JsonBuilder;
 import carmelo.json.JsonUtil;
-import carmelo.json.ResponseType;
 import carmelo.servlet.Request;
 import carmelo.session.Session;
 import carmelo.session.SessionConstants;
@@ -72,14 +70,19 @@ public class UserService {
 		//检查是否已经登录，若已经登录，刷新登录信息		
 		int userId = user.getId();
 		String sessionId = Users.getSessionId(userId);
+		FutureManager fm = (FutureManager)SpringContext.getBean(FutureManager.class);
+		SessionManager sm = SessionManager.getInstance();
 		if (sessionId != null ) {//已经登录,删除登录信息
 			Users.removeUser(userId);
-			SessionManager.getInstance().destroySession(sessionId);
+			Session session = sm.getSession(sessionId);
+			fm.removeFutureMap(session.getChannel());
+			sm.destroySession(sessionId);
 		}
 		Session session = SessionManager.getInstance().createSession();
 		session.getParams().put(SessionConstants.USER_ID, userId);
 		sessionId = session.getSessionId();
 		Users.addUser(userId, sessionId);
+		fm.addFutureMap(request.getCtx().channel());
 		
 		session.setChannel(request.getCtx().channel());
 		session.getChannel().attr(SessionConstants.SESSION_ID).set(sessionId);
@@ -105,7 +108,11 @@ public class UserService {
 		if (sessionId == null)
 			return JsonUtil.buildJsonFail("already offline");
 		
-		SessionManager.getInstance().destroySession(sessionId);
+		FutureManager fm = (FutureManager)SpringContext.getBean(FutureManager.class);
+		SessionManager sm = SessionManager.getInstance();
+		
+		fm.removeFutureMap(sm.getSession(sessionId).getChannel());
+		sm.destroySession(sessionId);
 		Users.removeUser(userId);
 		
 		return JsonUtil.buildJsonSuccess();

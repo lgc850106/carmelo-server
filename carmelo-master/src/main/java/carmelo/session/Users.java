@@ -1,6 +1,7 @@
 package carmelo.session;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import carmelo.servlet.Response;
@@ -43,6 +44,10 @@ public class Users {
 				session.push(response);
 			}
 		}
+	}
+	
+	public static Set<Integer> getUsers() {
+		return uid2sidMap.keySet();
 	}
 
 }

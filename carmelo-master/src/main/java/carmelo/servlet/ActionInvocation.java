@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
  * an action invocation represents an Action class stored in the servlet
  * 
  * @author needmorecode
+ * 这个类包装了一个可以被invoke的方法及相关参数，在Servlet类中使用
  *
  */
 public class ActionInvocation {

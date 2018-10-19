@@ -3,8 +3,8 @@ package carmelo.examples.server.login.action;
 import java.util.List;
 
 import carmelo.hibernate.BaseDao;
-import carmelo.json.ResponseType;
-import carmelo.json.JsonUtil;
+import carmelo.servlet.annotation.PassParameter;
+import carmelo.servlet.annotation.SessionParameter;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 
@@ -18,9 +18,9 @@ import carmelo.examples.server.login.dao.UserDao;
 import carmelo.examples.server.login.domain.User;
 import carmelo.examples.server.login.dto.TestDto;
 import carmelo.examples.server.login.service.UserService;
+import carmelo.json.JsonUtil;
+import carmelo.json.ResponseType;
 import carmelo.servlet.Request;
-import carmelo.servlet.annotation.PassParameter;
-import carmelo.servlet.annotation.SessionParameter;
 import carmelo.session.Session;
 import carmelo.session.SessionConstants;
 import carmelo.session.SessionManager;
