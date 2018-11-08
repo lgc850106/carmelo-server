@@ -4,7 +4,12 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+import carmelo.common.SpringContext;
+import carmelo.examples.server.hibernate.DatabaseTransaction;
+import carmelo.examples.server.login.domain.User;
+
 public class SessionManager {
+	
 	
 	private final static SessionManager instance = new SessionManager();
 	
@@ -53,13 +58,18 @@ public class SessionManager {
 		new Thread() {
 			public void run() {
 				while (true) {
+
 					for (Session session : sessionMap.values()) {
 						try {
 							if (session.isTimeout())
 							{
 								//客户端下线了，FutureManager会将相应的clientMap删除，所以这里不需要处理
+								int userId = (Integer)(session.getParams().get(SessionConstants.USER_ID));
 								destroySession(session.getSessionId());
-								Users.removeUser((Integer)(session.getParams().get(SessionConstants.USER_ID)));
+								Users.removeUser(userId);
+								//更新用户最后活跃时间
+								DatabaseTransaction dt =  (DatabaseTransaction)SpringContext.getBean(DatabaseTransaction.class);
+								dt.updateUserLastAccessTimeById(userId);
 							}
 						} catch(Exception e) {
 							e.printStackTrace();

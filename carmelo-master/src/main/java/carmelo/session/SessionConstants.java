@@ -8,5 +8,5 @@ public class SessionConstants {
 	 
 	 public static final String USER_ID = "user_id";
 	 
-	 public static final long SESSION_TIME_OUT_TIME = 3 * 60 * 1000;
+	 public static final long SESSION_TIME_OUT_TIME = 3 * 60 * 1000;// 3 * 60 * 1000
 }

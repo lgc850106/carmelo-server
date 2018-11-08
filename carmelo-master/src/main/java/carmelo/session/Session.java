@@ -56,4 +56,8 @@ public class Session {
 		this.channel = channel;
 	}
 	
+	public long getLastAccessTime() {
+		return this.lastAccessTime;
+	}
+	
 }

@@ -7,6 +7,12 @@
 	<name>carmelo</name>
 	<url></url>
 	<description>this is my game framework</description>
+	
+	<properties>	
+		<!-- Logging -->
+		<logback.version>1.0.13</logback.version>
+		<slf4j.version>1.7.5</slf4j.version>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -192,11 +198,6 @@
 		    <version>1.7.2</version>
 		</dependency>
 		<dependency>
-		    <groupId>log4j</groupId>
-		    <artifactId>log4j</artifactId>
-		    <version>1.2.16</version>
-		</dependency>
-		<dependency>
 		    <groupId>mysql</groupId>
 		    <artifactId>mysql-connector-java</artifactId>
 		    <version>5.1.26</version>
@@ -206,11 +207,21 @@
 		    <artifactId>proxool</artifactId>
 		    <version>0.8.3</version>
 		</dependency>
+		
+		<!-- Logging with SLF4J & LogBack -->
 		<dependency>
-		    <groupId>org.slf4j</groupId>
-		    <artifactId>slf4j-api</artifactId>
-		    <version>1.6.1</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>

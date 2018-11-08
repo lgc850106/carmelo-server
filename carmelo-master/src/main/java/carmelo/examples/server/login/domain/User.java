@@ -1,5 +1,7 @@
 package carmelo.examples.server.login.domain;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Random;
 
 import javax.persistence.Column;
@@ -8,8 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity 
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -18,6 +20,8 @@ public class User {
     private int id;
     private String name;
     private String password;
+    private int compositeId;
+    private String lastAccessTime;
 
     @Id  
     @GenericGenerator(name = "generator", strategy = "increment")  
@@ -36,6 +40,11 @@ public class User {
     public String getName() {
         return name;
     }
+    
+    @Column(name = "compositeId")
+    public int getCompositeId() {
+    	return compositeId;
+    }
 
     public void setId(int id) {
         this.id = id;
@@ -49,11 +58,32 @@ public class User {
         this.name = name;
     }
     
-    public static User createUser() {
+    public void setCompositeId(int compositeId) {
+    	this.compositeId = compositeId;
+    }
+    
+    
+    @Column(name = "lastAccessTime")
+    public String getLastAccessTime() {
+		return lastAccessTime;
+	}
+
+	public void setLastAccessTime(String lastAccessTime) {
+		this.lastAccessTime = lastAccessTime;
+	}
+	
+	public void refreshLastAccessTime() {
+		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		this.lastAccessTime  = dateformat.format(System.currentTimeMillis());
+	}
+
+	public static User createUser() {
     	User user = new User();
     	user.setName(createString());
     	user.setPassword(createString());
-    	
+    	//暂时使用随机数，后面要改成由composite表自动生成的id传递进来
+//    	user.setCompositeId((new Random().nextInt(Integer.MAX_VALUE)));
+    	user.refreshLastAccessTime();
     	return user;
     	
     }

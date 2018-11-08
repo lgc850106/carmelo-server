@@ -30,7 +30,7 @@ import io.netty.channel.Channel;
 @Component
 public class TimerTask {
 
-	@Scheduled(cron = "0/5 * * * * ?")  //每5秒执行一次
+//	@Scheduled(cron = "0/5 * * * * ?")  //每5秒执行一次
 	public void task() throws InterruptedException, ExecutionException, TimeoutException {
 		System.out.println("5秒一次向已经登录的客户端测试sayHello方法");
 
