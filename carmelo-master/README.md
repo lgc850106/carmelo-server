@@ -29,3 +29,47 @@ by lgc
 下一步改进准备优先使用Spring注释配置，并将通信协议拓展为双向对等的Request-Response协议
 
 20181125更新状态，在client端实现了一个随机游走环境，连接服务端后，服务端随机发送游走信号，在客户端可以看到箭头随机改变方向和游走
+
+数据库表格创建：
+------------------------------------
+create database if not exists my_test;
+USE `my_test`;
+DROP TABLE IF EXISTS `User`;
+CREATE TABLE `User` (
+  `id` int(11) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `compositeId` int(11) not null default 0,
+  `lastAcctessTime` datetime not null default 0,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `name` (`name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+select * from User;
+
+rename table user to User;
+
+
+CREATE TABLE `UserComposite` (
+  `id` int(11) NOT NULL,
+  `userId` varchar(255) NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `children` tinyblob,
+  `parentId` int(11),
+  `lastAcctessTime` datetime not null default 0,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `name` (`name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE `UserBitPort` (
+  `id` int(11) NOT NULL,
+  `userId` varchar(255) NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `readable` bit(1) not null,
+  `writeable` bit(1) not null,
+  `parentId` int(11),
+  `lastAcctessTime` datetime not null default 0,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `name` (`name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
