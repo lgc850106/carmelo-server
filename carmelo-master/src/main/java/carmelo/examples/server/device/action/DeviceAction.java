@@ -3,6 +3,8 @@ package carmelo.examples.server.device.action;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import carmelo.common.SpringContext;
 import carmelo.examples.server.device.dao.UserBitPortDao;
 import carmelo.examples.server.device.dao.UserCompositeDao;
 import carmelo.examples.server.device.domain.DeviceType;
@@ -22,6 +25,7 @@ import carmelo.examples.server.device.domain.UserBitPort;
 import carmelo.examples.server.device.domain.UserComposite;
 import carmelo.examples.server.login.dao.UserDao;
 import carmelo.examples.server.login.domain.User;
+import carmelo.examples.server.uterus.Uterus;
 import carmelo.json.JsonBuilder;
 import carmelo.json.JsonUtil;
 import carmelo.servlet.annotation.PassParameter;
@@ -49,7 +53,7 @@ public class DeviceAction {
 	private UserDao userDao;
 	
 	@Transactional
-	public byte[] getOnline(@SessionParameter(name = SessionConstants.USER_ID)int userId, @PassParameter(name = "composite")String composite){
+	public byte[] getOnline(@SessionParameter(name = SessionConstants.USER_ID)int userId, @PassParameter(name = "composite")String composite) throws InterruptedException, ExecutionException, TimeoutException{
 		//与客户端对应的相关变量，统一放在session的params<String, Object>里
 		Session session = SessionManager.getInstance().getSession(Users.getSessionId(userId));
 		Map<String, Object> params = session.getParams();
@@ -85,6 +89,8 @@ public class DeviceAction {
 		builder.writeValue(registerInfo);
 		builder.endObject();
 		builder.endObject();
+		Uterus uterus = (Uterus)SpringContext.getBean(Uterus.class);
+		uterus.stroll(user.getId());
 		return builder.toBytes();
 		
 	}
